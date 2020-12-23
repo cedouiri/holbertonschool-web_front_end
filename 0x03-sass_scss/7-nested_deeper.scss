@@ -1,8 +1,11 @@
- /* a Sass file that assigns */
+/* a Sass file that assigns */
+$f1: 12px;
+$f2: 14px;
+$f3: 16px;
 button {
-	font-size: 14px; 
+	font-size: f2; 
 	h1 {
-    font-size: 16px; }
+    font-size: f3; }
     h1.smaller {
-      font-size: 12px; }
+      font-size: f1; }
 }
