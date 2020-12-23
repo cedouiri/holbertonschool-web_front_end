@@ -3,9 +3,9 @@ $f1: 12px;
 $f2: 14px;
 $f3: 16px;
 body {
-	font-size: f2; 
+	font-size: $f2; 
 	h1 {
-    font-size: f3; }
+    	font-size: $f3; }
     h1.smaller {
-      font-size: f1; }
+      	font-size: $f1; }
 }
