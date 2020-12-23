@@ -1,0 +1,21 @@
+/* a Sass file that assigns */
+
+$screen_width: 960px 640px 320px;
+$font_size: 20px;
+
+h1 {
+	font-size: $font_size;
+	@each $width in $screen_width {
+		$font-size: $font-size - 2;
+		@media screen and (max-width: $width) {
+			& {
+				font-size: $font-size;
+				@if $width == 320px {
+					&.small {
+						color: #1D1D1D;
+					}
+				}
+			}
+		}
+	}
+}
