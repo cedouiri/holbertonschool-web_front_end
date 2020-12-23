@@ -1,0 +1,36 @@
+/* a Sass file that assigns */
+
+@import '103-sort_list';
+
+$alphabet: abcdefghijklmnopqrstuvwxyz;
+
+@function compare($s1, $s2) {
+	$s1: to-lower-case($s1);
+	$s2: to-lower-case($s2);
+	$len: min(str-length($s1), str-length($s2));
+	@for $i from 1 through $len {
+		$c1: str-index($alphabet, str-slice($s1, $i, $i));
+		$c2: str-index($alphabet, str-slice($s2, $i, $i));
+		@if $c1 != $c2 {
+			@return $c1 < $c2;
+		}
+	}
+	@return str-length($s1) < str-length($s2);
+}
+
+$j: length($list_to_sort);
+@while $j > 0 {
+	@for $i from 1 through $j {
+		@if $i + 1 < length($list_to_sort) + 1 {
+			$s1: nth($list_to_sort, $i);
+			$s2: nth($list_to_sort, $i + 1);
+			@if not compare($s1, $s2) {
+				$list_to_sort: set-nth($list_to_sort, $i, $s2);
+				$list_to_sort: set-nth($list_to_sort, $i + 1, $s1);
+			}
+		}	
+	}
+	$j: $j - 1;
+}
+
+@debug $list_to_sort;
