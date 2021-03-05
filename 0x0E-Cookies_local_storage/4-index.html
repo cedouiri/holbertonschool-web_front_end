@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>cookies task</title>
+        <script src="https://cdn.jsdelivr.net/npm/js-cookie@rc/dist/js.cookie.min.js"></script>
+
+    </head>
+    <body>
+        <div>
+            <form action="">
+                <h2>Login to the website</h2>
+                <input id="fname-input" type="text" placeholder="Firstname">
+                <input id="email-input" type="email" placeholder="Email">
+                <button id='cookies-btn'>Log me in</button>
+            </form>
+        </div>
+    </body>
+    <script type="application/javascript">
+        
+        /* function to Set Cookies
+        ------------*/
+
+        function setCookies() {
+            let fnameInput = document.getElementById('fname-input');
+            let emailInput = document.getElementById('email-input');
+
+            //	Create cookie with expiration date and specific path
+
+            let date = new Date();
+            date.setTime(date.getTime() + (10 * (24*60*60*1000) ));
+
+            document.cookie = `firstname=${fnameInput.value};`;
+            document.cookie = `email=${emailInput.value};`;
+            document.cookie = `expires=${date};`;
+        }
+
+        /* function to Show Cookies
+        ------------*/
+        
+        function showCookies() {
+            let p = document.createElement('p');
+            p.innerHTML = `Email: ${getCookie("email")} - Firstname: ${getCookie("firstname")}`;
+            document.body.append(p);
+        }
+
+
+
+        /*		function showForm
+		* It should remove the Welcome message if it exists
+		* It should show the form
+        */
+
+        function showForm() {
+            let welcomeMsg = document.getElementsByTagName('H1')[0];
+            let form = document.getElementsByTagName('form');
+
+            if (welcomeMsg) {
+                console.log('welcomemsg:');
+                console.log(welcomeMsg);
+                welcomeMsg.remove();
+            }
+            form[0].style.display = 'block';
+        }
+
+        /*		function hideForm
+		* It should hide the form
+        */
+
+        function hideForm() {
+            let form = document.getElementsByTagName('form');
+            form[0].style.display = 'none';
+        }
+
+        /*		function deleteCookiesAndShowForm
+		* It should remove the two cookies
+		* it should show the form by calling the showForm function
+        */
+
+        function deleteCookiesAndShowForm() {
+            document.cookie = `firstname=;`;
+            document.cookie = `email=;`;
+            document.cookie = `expires=;`;
+            showForm();
+        }
+
+        /*		function showWelcomeMessageOrForm
+		* if user is not logged in, the function showForm is called
+		* If the user is logged in, replace the body of the page with a h1
+			- It should display Welcome FIRSTNAME (logout)
+			(logout) should be a link
+			- The link font should be display in normal weight, italic, and 10px to the right of the message
+			- On click, call the function deleteCookiesAndShowForm, hide the welcome message, and show the form
+        */
+
+        function showWelcomeMessageOrForm() {
+            if (!Cookies.get('firstname') || !Cookies.get('email')) {
+                showForm();
+            }
+            else {
+                let form = document.getElementsByTagName('form');
+                let headingOne = document.createElement('H1');
+                form[0].style.display = 'none';
+                headingOne.innerHTML = `
+                    Welcome: ${Cookies.get('firstname')} 
+                    <a href="" onclick="deleteCookiesAndShowForm()" style="font-weight: normal; font-style: italic; margin-left: 10px; color: inherit; text-decoration:none;">(Logout)</a>
+                `;
+                document.body.append(headingOne);
+            }            
+        }
+
+
+        function setCookiesAndShowWelcomeMessage() {
+            let btn = document.getElementById('cookies-btn');
+            btn.onclick = () => setCookies();
+            showWelcomeMessageOrForm();
+        }
+
+        setCookiesAndShowWelcomeMessage();
+    </script>
+</html>
