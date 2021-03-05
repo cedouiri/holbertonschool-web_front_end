@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>cookies task</title>
+    </head>
+    <body>
+    </body>
+    <script type="application/javascript">
+
+        /*
+        Create an array availableItems that will contain all the available items. Add the strings Shampoo, Soap, Sponge, and Water in the array
+        */
+
+        let availableItems = ['Shampoo', 'Soap', 'Sponge', 'Water'];
+
+        /*
+        * If Local storage is not enabled on your browser, display an alert that will contain the message Sorry, your browser does not support Web storage. Try again with a better one
+        * If local storage is available it should allow the user to see the application and call the function createStore and displayCart
+        */
+
+        if (typeof(Storage) !== undefined) {
+            createStore();
+            displayCart();
+        } else {
+            alert("Sorry, your browser does not support Web storage. Try again with a better one");
+        }
+
+        function getCartFromStorage() {
+            if (sessionStorage.cart) {
+                return JSON.parse(sessionStorage.cart);
+            }
+            return {};
+        }
+
+        /*  a function addItemToCart
+        * It takes on argument item (string)
+        * It adds a key to the local storage of the name of the item, and set the value to true
+        */
+
+        function addItemToCart(item) {
+            let cart = getCartFromStorage();
+
+            if (cart[item]) {
+                cart[item] += 1;
+            } else {
+                cart[item] = 1;
+            }
+            sessionStorage.setItem('cart', JSON.stringify(cart));
+            displayCart();
+        }
+
+        function removeItemfromCart(item) {
+            let cart = getCartFromStorage();
+
+            if (cart[item]) {
+                delete cart[item];
+            }
+            sessionStorage.setItem('cart', JSON.stringify(cart));
+            displayCart();
+        }
+
+        function clearCart() {
+            sessionStorage.clear();
+            displayCart();
+        }
+
+        /*      a function createStore
+        * Create a ul and append it to the DOM
+        * Loop through the array of items, and create a list item to add to the ul
+        * The item should display the name of the available product
+        * On click the item should call the function addItemToCart
+        */
+
+        function createStore() {
+            let headingTwo = document.createElement('H2');
+            let ul = document.createElement('ul');
+
+            headingTwo.appendChild(document.createTextNode('Available products:'));
+
+            for (let i = 0; i < availableItems.length; i++) {
+                let item = document.createElement('li');
+                item.onclick = function () {
+                    addItemToCart(availableItems[i]);
+                }
+                item.appendChild(document.createTextNode(availableItems[i]));
+                ul.appendChild(item);
+            }
+            document.body.append(headingTwo);
+            document.body.append(ul);
+        }
+
+        /*      a function displayCart
+        * If the local storage does not contain any item, this function does not do anything
+        * If the local storage contains any item, it should display the message You previously had X items in your cart in a p element that you can append to the body
+        */
+
+        function displayCart() {
+            let existingDiv = document.querySelector("div");
+
+            if (document.getElementsByTagName('H2').length == 1) {
+                let headingTwo = document.createElement('H2');
+                headingTwo.appendChild(document.createTextNode('Your cart:'));
+                document.body.append(headingTwo);
+            }
+
+            if (existingDiv) {
+                let ul = document.querySelector("div ul");
+                while (ul.firstChild) {
+                    ul.removeChild(ul.firstChild);
+                }
+            } else {
+                let div = document.createElement('DIV');
+                document.body.append(div);
+            }
+
+            updateCart();
+        }
+
+        function updateCart() {
+            let div = document.querySelector("div");
+            let cart = getCartFromStorage();
+            let ul;
+
+            if (!document.querySelector('div ul')) {
+                ul = document.createElement('UL');
+            } else {
+                ul = document.querySelector('div ul');
+            }
+
+            if (Object.keys(cart).length == 0) {
+                let li = document.createElement('LI');
+                li.appendChild(document.createTextNode('Your cart is empty'));
+                ul.appendChild(li);
+            } else {
+                let li = document.createElement('LI');
+                let span = document.createElement('SPAN');
+                span.innerHTML = `<span onclick="clearCart()">Clear your cart</span>`;
+                li.appendChild(span);
+                ul.appendChild(li);
+
+                for (const [k, v] of Object.entries(cart)) {
+                    let li = document.createElement('LI');
+                    let span = document.createElement('SPAN');
+
+                    span.onclick = function () {
+                        removeItemfromCart(k);
+                    }
+                    span.appendChild(document.createTextNode('(remove)'));
+                    li.append(`${k} X ${v}`);
+                    li.appendChild(span);
+                    ul.appendChild(li);
+                }
+            }
+
+            if (!document.getElementsByTagName('UL')[1]) {
+                div.appendChild(ul);
+            }
+        }
+
+    </script>
+</html>
